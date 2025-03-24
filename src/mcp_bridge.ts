@@ -1,4 +1,9 @@
 import express from 'express';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
+
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
@@ -28,13 +33,24 @@ const app = express();
 
 app.use(express.json());
 
-// TODO: Here you'd want to add an auth middleware to protect the server
+// Only allow requests with a valid API token
+const authMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction): void => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (!token || token !== process.env.API_TOKEN) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
+    
+    next();
+};
 
-app.get('/', async (req, res) => {
+app.get('/', authMiddleware, async (req, res) => {
     res.status(200).json(await client.listTools());
 });
 
-app.post('/', async (req, res) => {
+app.post('/', authMiddleware, async (req, res) => {
     try {
         const call_tool_params = {
             name: req.body.tool,
