@@ -67,3 +67,4 @@ package-lock.json
 dist/
 sql-mcp-server/
 .env
+database.db

@@ -1,7 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 
-// Load environment variables from .env file
 dotenv.config();
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
@@ -52,12 +51,10 @@ app.get('/', authMiddleware, async (req, res) => {
 
 app.post('/', authMiddleware, async (req, res) => {
     try {
-        const call_tool_params = {
+        res.status(200).json(await client.callTool({
             name: req.body.tool,
             arguments: req.body.arguments
-        }
-        console.log(call_tool_params.arguments);
-        res.status(200).json(await client.callTool(call_tool_params));
+        }));
     } catch (error) {
         res.status(400).json({ error: error });
     }
