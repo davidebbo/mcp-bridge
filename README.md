@@ -1,18 +1,3 @@
-```bash
-# Example of a POST request with JSON data
-curl -X POST http://localhost:8000/ \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer YOUR_TOKEN" \
-    -d '{
-        "tool": "query_data",
-        "arguments": {
-            "sql": "select * from people"
-        }
-    }'
-```
+To run the MCP bridge, pass it the MCP server command to run on the command line, e.g.
 
-This curl command sends a POST request to `https://api.example.com/data` with:
-
-- Content-Type header set to application/json
-- Authorization header with a bearer token
-- JSON payload containing name, email, and message fields
+    node dist/mcp_bridge.js python sql-mcp-server/mcp_server.py
