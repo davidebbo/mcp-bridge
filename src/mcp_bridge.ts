@@ -46,16 +46,23 @@ const authMiddleware = (req: express.Request, res: express.Response, next: expre
 };
 
 app.get('/', authMiddleware, async (req, res) => {
+    console.log("listtools");
     res.status(200).json(await client.listTools());
 });
 
 app.post('/', authMiddleware, async (req, res) => {
     try {
-        res.status(200).json(await client.callTool({
+        console.log(`calltool ${req.body.tool}`);
+        var args = req.body.arguments;
+        console.log(`Args: ${JSON.stringify(args)}`);
+        var ret = await client.callTool({
             name: req.body.tool,
-            arguments: req.body.arguments
-        }));
+            arguments: args
+        })
+        console.log(`Result: ${JSON.stringify(ret)}`);
+        res.status(200).json(ret);
     } catch (error) {
+        console.error(`Error calling tool: ${JSON.stringify(error)}`);
         res.status(400).json({ error: error });
     }
 });
